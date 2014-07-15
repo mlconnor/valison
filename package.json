@@ -1,0 +1,37 @@
+{
+  "name": "valison",
+  "version": "0.0.1",
+  "main": "lib/valison.js",
+  "description": "node validation using json objects intead of coding",
+  "homepage": "https://github.com/mlconnor/valison",
+  "bugs": "https://github.com/mlconnor/valison/issues",
+  "author": {
+    "name": "Michael Connor",
+    "email": "mlconnor@yahoo.com",
+    "url": "https://github.com/mlconnor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mlconnor/valison"
+  },
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "keywords": [],
+  "devDependencies": {
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "load-grunt-tasks": "^0.4.0",
+    "time-grunt": "^0.3.1",
+    "jshint-stylish": "^0.2.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "dependencies": {
+    "validator": "~3.16.1",
+    "lodash": "~2.4.1"
+  }
+}
