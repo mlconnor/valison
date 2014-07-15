@@ -35,6 +35,8 @@ exports.valison = {
      // firstName=trim|isLength(1,20)
       "firstName":[
 	["trim"],
+        ["toUpperCase"],
+        ["reverse"],
 	["isLength", null, 1, 20]
       ],
       "address.addressLine1" : [
