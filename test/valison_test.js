@@ -37,34 +37,35 @@ exports.valison = {
 	["trim"],
         ["toUpperCase"],
         ["reverse"],
-	["isLength", null, 1, 20]
+	["isLength", 1, 20]
       ],
       "address.addressLine1" : [
 	["!isNull"],
-	["isLength","Address Line 1 should be 5-10 chars long", 5, 10]
+        ["!isEmpty"],
+	["isLength", 5, 10, "## Address Line 1 should be 5-10 chars long"]
       ]
     };
-    test.deepEqual(valison.validate(def1, {"firstName":"Michael",address:{"addressLine1":"6583 Goldenrod"}}), {"address.addressLine1":"Address Line 1 should be 5-10 chars long"}, 'should be {}');
+    test.deepEqual(valison.valid(def1, {"firstName":"Michael",address:{"addressLine1":"6583 Goldenrod"}}), {"address.addressLine1":"Address Line 1 should be 5-10 chars long"}, 'should be {}');
 
     var def2 = {
       "creditcard" : [
         ["trim"],
         ["whitelist","0123456789"],
-        ["isCreditCard","hey man, that's a bogus card"]
+        ["isCreditCard", "## Hey man, that's a bogus credit card"]
       ]
     };
 
-    test.deepEqual(valison.validate(def2, {"firstName":"Michael", "creditcard" : " 3725 109 222 299999a "}), {"creditcard":"hey man, that's a bogus card"}, 'should be {cc}');
-    test.deepEqual(valison.validate(def2, {"firstName":"Michael", "creditcard" : "  3782 822 463 10005 "}), {}, 'should be {}');
+    test.deepEqual(valison.valid(def2, {"firstName":"Michael", "creditcard" : " 3725 109 222 299999a "}), {"creditcard":"Hey man, that's a bogus credit card"}, 'should be {cc}');
+    test.deepEqual(valison.valid(def2, {"firstName":"Michael", "creditcard" : "  3782 822 463 10005 "}), true, 'should be {}');
 
     var def3 = {
       "middleName" : [
-        ["!isEmpty","Middle name can't be empty"]
+        ["!isEmpty","## Middle name can't be empty"]
       ]
     };
 
     /* let's test lodash */
-    test.deepEqual(valison.validate(def3, {"firstName":"Michael", "lastName" : "Connor"}), {"middleName":"Middle name can't be empty"}, 'should be ...');
+    test.deepEqual(valison.valid(def3, {"firstName":"Michael", "lastName" : "Connor"}), {"middleName":"Middle name can't be empty"}, 'should be ...');
 
     test.done();
   }
