@@ -48,35 +48,31 @@ exports.valison = {
     };
 
     test.deepEqual(valison.valid(def1, {"firstName":"Michael",address:{"addressLine1":"6583 Goldenrod"}}), {"address.addressLine1":"Address Line 1 should be 5-10 chars long"}, 'should be {}');
-
+*/
     var def2 = {
       "creditcard" : [
-        ["trim"],
-        ["whitelist","0123456789"],
-        ["isCreditCard", "## Hey man, that's a bogus credit card"]
+        {"set":"trim(value)"},
+        {"set":"whitelist(value,'0123456789')"},
+        {"unless":"isCreditCard(value)", "msg":"## Hey man, that's a bogus credit card"}
       ]
     };
 
-    test.deepEqual(valison.valid(def2, {"firstName":"Michael", "creditcard" : " 3725 109 222 299999a "}), {"creditcard":"Hey man, that's a bogus credit card"}, 'should be {cc}');
-    test.deepEqual(valison.valid(def2, {"firstName":"Michael", "creditcard" : "  3782 822 463 10005 "}), true, 'should be {}');
+    valison.evaluate(def2, {"firstName":"Michael", "creditcard" : " 3725 109 222 299999a "});
+    valison.evaluate(def2, {"firstName":"Michael", "creditcard" : " 3782 822 463 10005 xyz "});
+    //test.deepEqual(valison.valid(def2, {"firstName":"Michael", "creditcard" : " 3725 109 222 299999a "}), {"creditcard":"Hey man, that's a bogus credit card"}, 'should be {cc}');
+    //test.deepEqual(valison.valid(def2, {"firstName":"Michael", "creditcard" : "  3782 822 463 10005 "}), true, 'should be {}');
 
     var def3 = {
       "middleName" : [
-        ["!isEmpty","## Middle name can't be empty"]
+        {"if"     : "isUndefined(middleName)", msg:"middle name is required"},
+        {"unless" : "isString(middleName)", msg:"middle name was supposed to be a string"},
+        {"unless" : "isIn(middleName,['Lawrence','Larry','Fred'])", msg:"middlename is not one of the valid values"},
+        {"unless" : "isLength(middleName,4,5)", msg:"middlename should have been between 4 and 8 characters"}
       ]
     };
 
-    test.deepEqual(valison.valid(def3, {"firstName":"Michael", "lastName" : "Connor"}), {"middleName":"Middle name can't be empty"}, 'should be ...');
-*/
-    var expTest = {
-      "request.query.pincode" : [
-	{ "unless" : "isString(value)", "msg" : "pincode is a required field" },
-	{ "set"    : "toUpperCase(value)" },
-	{ "set"    : "whitelist(value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')" },
-	{ "unless" : "value.length == 14", "msg":"pincode must be 14 characters long with only numbers and letters" }
-      ]
-    };
-    valison.express(expTest, {"request":{ "query": {"pincode":" 1234567890aBcD "}}}, function() { console.log('callback invoked with',arguments); return false; });
+    valison.evaluate(def3, {"firstName":"Michael", "middleName":"Lawrence"});
+//    test.deepEqual(valison.valid(def3, {"firstName":"Michael", "lastName" : "Connor"}), {"middleName":"Middle name can't be empty"}, 'should be ...');
 
     test.done();
   }
