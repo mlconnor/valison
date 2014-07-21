@@ -31,6 +31,7 @@ exports.valison = {
   'no args': function(test) {
     // test.expect(1);
     // tests here
+/*
     var def1 = {
      // firstName=trim|isLength(1,20)
       "firstName":[
@@ -45,6 +46,7 @@ exports.valison = {
 	["isLength", 5, 10, "## Address Line 1 should be 5-10 chars long"]
       ]
     };
+
     test.deepEqual(valison.valid(def1, {"firstName":"Michael",address:{"addressLine1":"6583 Goldenrod"}}), {"address.addressLine1":"Address Line 1 should be 5-10 chars long"}, 'should be {}');
 
     var def2 = {
@@ -64,8 +66,17 @@ exports.valison = {
       ]
     };
 
-    /* let's test lodash */
     test.deepEqual(valison.valid(def3, {"firstName":"Michael", "lastName" : "Connor"}), {"middleName":"Middle name can't be empty"}, 'should be ...');
+*/
+    var expTest = {
+      "request.query.pincode" : [
+	{ "unless" : "isString(value)", "msg" : "pincode is a required field" },
+	{ "set"    : "toUpperCase(value)" },
+	{ "set"    : "whitelist(value, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')" },
+	{ "unless" : "value.length == 14", "msg":"pincode must be 14 characters long with only numbers and letters" }
+      ]
+    };
+    valison.express(expTest, {"request":{ "query": {"pincode":" 1234567890aBcD "}}}, function() { console.log('callback invoked with',arguments); return false; });
 
     test.done();
   }
